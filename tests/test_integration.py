@@ -13,12 +13,11 @@ Flow tested:
 
 import json
 from collections import defaultdict
-from unittest.mock import MagicMock, patch
 
 import responses
 
-from shared.models import CostRecord, WasteResource, AdvisorRecommendation, CostAlert
-from shared.alert_client import AlertClient
+from shared.models import CostAlert  # pylint: disable=import-error
+from shared.alert_client import AlertClient  # pylint: disable=import-error
 
 
 class TestEndToEndPipeline:

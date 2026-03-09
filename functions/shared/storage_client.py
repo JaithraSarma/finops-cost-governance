@@ -11,6 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from azure.core.exceptions import AzureError, HttpResponseError, ResourceExistsError
 from azure.data.tables import TableServiceClient, TableClient
 
 from shared.config import settings
@@ -36,7 +37,7 @@ class StorageClient:
         ):
             try:
                 self._service.create_table_if_not_exists(name)
-            except Exception:
+            except (AzureError, ResourceExistsError):
                 logger.warning("Could not ensure table %s exists", name)
 
     def _get_table(self, table_name: str) -> TableClient:
@@ -52,7 +53,7 @@ class StorageClient:
             try:
                 table.upsert_entity(entity, mode="Replace")
                 count += 1
-            except Exception:
+            except (AzureError, HttpResponseError):
                 logger.warning(
                     "Failed to upsert entity PK=%s RK=%s",
                     entity.get("PartitionKey", "?"),
@@ -67,7 +68,7 @@ class StorageClient:
             table = self._get_table(table_name)
             table.upsert_entity(entity, mode="Replace")
             return True
-        except Exception:
+        except (AzureError, HttpResponseError):
             logger.exception("Failed to insert entity into %s", table_name)
             return False
 
@@ -91,7 +92,7 @@ class StorageClient:
         try:
             for entity in table.query_entities(**kwargs):
                 entities.append(dict(entity))
-        except Exception:
+        except (AzureError, HttpResponseError):
             logger.exception("Failed to query %s", table_name)
         return entities
 
@@ -108,5 +109,5 @@ class StorageClient:
                     partition_key=entity["PartitionKey"],
                     row_key=entity["RowKey"],
                 )
-        except Exception:
+        except (AzureError, HttpResponseError):
             logger.exception("Failed to clear table %s", table_name)

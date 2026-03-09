@@ -1,13 +1,11 @@
 """Tests for the alert_dispatcher (notification delivery) logic."""
 
 import json
-from unittest.mock import MagicMock, patch
 
 import responses
-import requests
 
-from shared.alert_client import AlertClient
-from shared.models import CostAlert
+from shared.alert_client import AlertClient  # pylint: disable=import-error
+from shared.models import CostAlert  # pylint: disable=import-error
 
 
 class TestAlertClient:
@@ -112,9 +110,8 @@ class TestAlertClient:
             ("warning", "FFA500"),
             ("info", "0078D4"),
         ]:
-            alert = self._make_alert(severity=severity)
-            client = AlertClient(slack_url="", teams_url="")
+            _ = self._make_alert(severity=severity)
+            _ = AlertClient(slack_url="", teams_url="")
             # Test the internal Teams payload builder
-            payload = None
             colour = {"critical": "FF0000", "warning": "FFA500", "info": "0078D4"}.get(severity, "808080")
             assert colour == expected_colour

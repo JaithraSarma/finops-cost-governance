@@ -14,6 +14,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from azure.core.exceptions import AzureError, HttpResponseError
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.monitor import MonitorManagementClient
@@ -74,8 +75,8 @@ class ResourceAnalyzer:
                         estimated_monthly_savings=savings,
                         details=f"Unattached disk, size={size_gb} GB",
                     ))
-        except Exception:
-            logger.exception("Error scanning disks")
+        except (AzureError, HttpResponseError) as exc:
+            logger.exception("Error scanning disks: %s", exc)
         logger.info("Found %d unattached disks", len(findings))
         return findings
 
@@ -104,8 +105,8 @@ class ResourceAnalyzer:
                         estimated_monthly_savings=_LB_MONTHLY_COST,
                         details="Load balancer has no backend pool members",
                     ))
-        except Exception:
-            logger.exception("Error scanning load balancers")
+        except (AzureError, HttpResponseError) as exc:
+            logger.exception("Error scanning load balancers: %s", exc)
         logger.info("Found %d idle load balancers", len(findings))
         return findings
 
@@ -128,8 +129,8 @@ class ResourceAnalyzer:
                         estimated_monthly_savings=_PIP_MONTHLY_COST,
                         details="Public IP not associated with any resource",
                     ))
-        except Exception:
-            logger.exception("Error scanning public IPs")
+        except (AzureError, HttpResponseError) as exc:
+            logger.exception("Error scanning public IPs: %s", exc)
         logger.info("Found %d unused public IPs", len(findings))
         return findings
 
@@ -170,10 +171,10 @@ class ResourceAnalyzer:
                             estimated_monthly_savings=0.0,  # needs pricing API
                             details=f"Avg CPU {avg_cpu:.1f}% over 7 days (threshold: 5%)",
                         ))
-                except Exception:
+                except (AzureError, HttpResponseError):
                     logger.warning("Could not fetch metrics for VM %s", vm.name)
-        except Exception:
-            logger.exception("Error scanning VMs")
+        except (AzureError, HttpResponseError) as exc:
+            logger.exception("Error scanning VMs: %s", exc)
         logger.info("Found %d oversized VMs", len(findings))
         return findings
 
@@ -199,6 +200,6 @@ def _get_average_metric(metrics_response: Any) -> float | None:
                 ]
                 if values:
                     return round(sum(values) / len(values), 2)
-    except Exception:
+    except (AttributeError, TypeError, ZeroDivisionError):
         pass
     return None

@@ -1,0 +1,11 @@
+[tool.pylint.main]
+init-hook = "import sys; sys.path.insert(0, 'functions')"
+
+[tool.pylint."messages control"]
+disable = [
+    "unused-argument",
+    "import-error",
+]
+
+[tool.pyright]
+extraPaths = ["functions"]

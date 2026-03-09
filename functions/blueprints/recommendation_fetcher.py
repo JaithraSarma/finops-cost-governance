@@ -32,6 +32,7 @@ bp = func.Blueprint()
 )
 def recommendation_fetcher(timer: func.TimerRequest, alertqueue: func.Out[str]) -> None:
     """Fetch Azure Advisor cost recommendations and persist them."""
+    _ = timer  # required by Azure Functions binding
     logger.info("recommendation_fetcher triggered at %s", datetime.now(timezone.utc).isoformat())
 
     # 1. Fetch recommendations from Azure Advisor

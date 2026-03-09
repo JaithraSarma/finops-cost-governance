@@ -14,9 +14,9 @@ from datetime import datetime, timedelta, timezone
 # Ensure functions/ is on the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "functions"))
 
-from shared.models import CostRecord, WasteResource, AdvisorRecommendation, CostAlert
-from shared.storage_client import StorageClient
-from shared.config import settings
+from shared.models import CostRecord, WasteResource, AdvisorRecommendation  # pylint: disable=import-error,wrong-import-position
+from shared.storage_client import StorageClient  # pylint: disable=import-error,wrong-import-position
+from shared.config import settings  # pylint: disable=import-error,wrong-import-position
 
 # ── Configuration ────────────────────────────────────────────────────────────
 

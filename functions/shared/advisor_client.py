@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import logging
 
+from azure.core.exceptions import AzureError, HttpResponseError
 from azure.identity import DefaultAzureCredential
 from azure.mgmt.advisor import AdvisorManagementClient
 
@@ -49,8 +50,8 @@ class AdvisorClient:
                     action=str(rec.recommendation_type_id or ""),
                     subscription_id=self._subscription_id,
                 ))
-        except Exception:
-            logger.exception("Error fetching Advisor recommendations")
+        except (AzureError, HttpResponseError) as exc:
+            logger.exception("Error fetching Advisor recommendations: %s", exc)
 
         logger.info("Fetched %d cost recommendations", len(recommendations))
         return recommendations

@@ -1,8 +1,8 @@
 """Tests for the resource_analyzer (waste detection) logic."""
 
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, patch
 
-from shared.resource_client import ResourceAnalyzer, _extract_rg, _get_average_metric
+from shared.resource_client import ResourceAnalyzer, _extract_rg, _get_average_metric  # pylint: disable=import-error
 
 
 class TestExtractRg:
@@ -44,6 +44,8 @@ class TestGetAverageMetric:
 
 class TestResourceAnalyzer:
     """Test waste detection for various resource types."""
+
+    # pylint: disable=unused-argument  # @patch args required positionally
 
     @patch("shared.resource_client.MonitorManagementClient")
     @patch("shared.resource_client.NetworkManagementClient")

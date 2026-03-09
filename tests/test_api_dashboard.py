@@ -1,8 +1,5 @@
 """Tests for the api_dashboard HTTP endpoints."""
 
-import json
-from unittest.mock import MagicMock, patch
-
 
 class TestHealthEndpoint:
     def test_health_returns_200(self):

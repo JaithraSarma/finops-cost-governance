@@ -2,7 +2,7 @@
 
 from unittest.mock import MagicMock, patch
 
-from shared.advisor_client import AdvisorClient
+from shared.advisor_client import AdvisorClient  # pylint: disable=import-error
 
 
 class TestAdvisorClient:

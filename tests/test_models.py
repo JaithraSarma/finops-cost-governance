@@ -1,7 +1,7 @@
 """Tests for the data models."""
 
 import json
-from shared.models import CostRecord, WasteResource, AdvisorRecommendation, CostAlert
+from shared.models import CostRecord, WasteResource, AdvisorRecommendation, CostAlert  # pylint: disable=import-error
 
 
 class TestCostRecord:

@@ -7,13 +7,14 @@ and patched environment variables for isolated testing.
 
 import os
 import sys
-import json
-import pytest
-from unittest.mock import MagicMock, patch
-from datetime import datetime, timezone
+
+import pytest  # pylint: disable=import-error
+from unittest.mock import MagicMock
 
 # Ensure the functions directory is on the path so imports resolve
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "functions"))
+
+# pylint: disable=import-error,wrong-import-position
 
 
 # ── Environment variables ────────────────────────────────────────────────────
@@ -173,13 +174,13 @@ def mock_storage_client():
     def get_all(table_name):
         return _store.get(table_name, [])
 
-    def query_entities(table_name, filter_expr=None, top=None):
+    def query_entities(table_name, **_kwargs):
         return _store.get(table_name, [])
 
     mock.upsert_entities.side_effect = upsert_entities
     mock.insert_entity.side_effect = insert_entity
     mock.get_all.side_effect = get_all
     mock.query_entities.side_effect = query_entities
-    mock._store = _store  # expose for assertions
+    mock.store = _store  # expose for assertions
 
     return mock

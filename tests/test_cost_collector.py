@@ -1,17 +1,18 @@
 """Tests for the cost_collector function logic."""
 
-import json
 from unittest.mock import MagicMock, patch
 
-from shared.models import CostRecord
+from shared.models import CostRecord  # pylint: disable=import-error
 
 
 class TestCostCollector:
     """Test the cost collection and anomaly detection logic."""
 
+    # pylint: disable=import-error
+
     @patch("shared.cost_client.CostManagementClient")
     @patch("shared.cost_client.DefaultAzureCredential")
-    def test_query_daily_costs(self, mock_cred, mock_cm_client, sample_cost_records):
+    def test_query_daily_costs(self, mock_cred, mock_cm_client):
         """CostClient.query_daily_costs should parse API results into CostRecords."""
         from shared.cost_client import CostClient
 
@@ -87,8 +88,6 @@ class TestCostCollector:
 
     def test_no_anomaly_when_stable(self):
         """No anomaly should fire when costs are stable."""
-        from shared.models import CostRecord
-
         records = [
             CostRecord(date="2026-03-01", subscription_id="s1", resource_group="rg1",
                        service_name="VM", cost=100.0),

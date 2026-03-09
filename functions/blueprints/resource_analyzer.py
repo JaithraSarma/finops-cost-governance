@@ -38,6 +38,7 @@ bp = func.Blueprint()
 )
 def resource_analyzer(timer: func.TimerRequest, alertqueue: func.Out[str]) -> None:
     """Scan for idle / underutilised resources and report waste."""
+    _ = timer  # required by Azure Functions binding
     logger.info("resource_analyzer triggered at %s", datetime.now(timezone.utc).isoformat())
 
     # 1. Run all waste detection checks

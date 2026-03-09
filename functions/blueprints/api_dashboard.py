@@ -41,6 +41,7 @@ def _json_response(body: dict | list, status: int = 200) -> func.HttpResponse:
 
 @bp.route(route="health", methods=["GET"], auth_level=func.AuthLevel.ANONYMOUS)
 def health(req: func.HttpRequest) -> func.HttpResponse:
+    _ = req
     return _json_response({
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -53,6 +54,7 @@ def health(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="costs/summary", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def costs_summary(req: func.HttpRequest) -> func.HttpResponse:
     """Return aggregated cost summary for the current month."""
+    _ = req
     storage = StorageClient()
     records = storage.get_all(settings.COST_TABLE_NAME)
 
@@ -77,6 +79,7 @@ def costs_summary(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="costs/trends", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def costs_trends(req: func.HttpRequest) -> func.HttpResponse:
     """Return daily cost totals for trend charting."""
+    _ = req
     storage = StorageClient()
     records = storage.get_all(settings.COST_TABLE_NAME)
 
@@ -97,6 +100,7 @@ def costs_trends(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="costs/by-team", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def costs_by_team(req: func.HttpRequest) -> func.HttpResponse:
     """Return costs grouped by the 'team' tag."""
+    _ = req
     storage = StorageClient()
     records = storage.get_all(settings.COST_TABLE_NAME)
 
@@ -117,6 +121,7 @@ def costs_by_team(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="costs/by-environment", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def costs_by_environment(req: func.HttpRequest) -> func.HttpResponse:
     """Return costs grouped by the 'environment' tag."""
+    _ = req
     storage = StorageClient()
     records = storage.get_all(settings.COST_TABLE_NAME)
 
@@ -137,6 +142,7 @@ def costs_by_environment(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="waste/report", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def waste_report(req: func.HttpRequest) -> func.HttpResponse:
     """Return all identified waste resources."""
+    _ = req
     storage = StorageClient()
     findings = storage.get_all(settings.WASTE_TABLE_NAME)
 
@@ -154,6 +160,7 @@ def waste_report(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="recommendations", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def recommendations(req: func.HttpRequest) -> func.HttpResponse:
     """Return Azure Advisor cost recommendations."""
+    _ = req
     storage = StorageClient()
     recs = storage.get_all(settings.RECOMMENDATIONS_TABLE_NAME)
 
@@ -171,6 +178,7 @@ def recommendations(req: func.HttpRequest) -> func.HttpResponse:
 @bp.route(route="alerts/recent", methods=["GET"], auth_level=func.AuthLevel.FUNCTION)
 def alerts_recent(req: func.HttpRequest) -> func.HttpResponse:
     """Return the 50 most recent alerts."""
+    _ = req
     storage = StorageClient()
     alerts = storage.get_all(settings.ALERTS_TABLE_NAME)
 

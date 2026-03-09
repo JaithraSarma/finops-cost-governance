@@ -1,0 +1,6 @@
+{
+  "extraPaths": ["functions"],
+  "reportUnusedImport": false,
+  "reportUnusedVariable": false,
+  "reportUnusedParameter": false
+}
