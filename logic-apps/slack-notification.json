@@ -1,0 +1,89 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "manual": {
+        "type": "Request",
+        "kind": "Http",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Formatted Slack message text"
+              }
+            },
+            "required": ["text"]
+          }
+        }
+      }
+    },
+    "actions": {
+      "Post_to_Slack": {
+        "type": "Http",
+        "runAfter": {},
+        "inputs": {
+          "method": "POST",
+          "uri": "@parameters('slackWebhookUrl')",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "💰 FinOps Cost Alert"
+                }
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "@{triggerBody()?['text']}"
+                }
+              },
+              {
+                "type": "divider"
+              },
+              {
+                "type": "context",
+                "elements": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "Sent by FinOps Cost Governance System"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "Response": {
+        "type": "Response",
+        "runAfter": {
+          "Post_to_Slack": ["Succeeded"]
+        },
+        "inputs": {
+          "statusCode": 200,
+          "body": {
+            "status": "sent",
+            "channel": "slack"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "slackWebhookUrl": {
+        "type": "String",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Slack Incoming Webhook URL for the target channel"
+        }
+      }
+    }
+  }
+}

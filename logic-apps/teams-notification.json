@@ -1,0 +1,80 @@
+{
+  "definition": {
+    "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+    "contentVersion": "1.0.0.0",
+    "triggers": {
+      "manual": {
+        "type": "Request",
+        "kind": "Http",
+        "inputs": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "@type": { "type": "string" },
+              "@context": { "type": "string" },
+              "themeColor": { "type": "string" },
+              "summary": { "type": "string" },
+              "sections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "activityTitle": { "type": "string" },
+                    "facts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "name": { "type": "string" },
+                          "value": { "type": "string" }
+                        }
+                      }
+                    },
+                    "text": { "type": "string" },
+                    "markdown": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "Post_to_Teams": {
+        "type": "Http",
+        "runAfter": {},
+        "inputs": {
+          "method": "POST",
+          "uri": "@parameters('teamsWebhookUrl')",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": "@triggerBody()"
+        }
+      },
+      "Response": {
+        "type": "Response",
+        "runAfter": {
+          "Post_to_Teams": ["Succeeded"]
+        },
+        "inputs": {
+          "statusCode": 200,
+          "body": {
+            "status": "sent",
+            "channel": "teams"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "teamsWebhookUrl": {
+        "type": "String",
+        "defaultValue": "",
+        "metadata": {
+          "description": "Microsoft Teams Incoming Webhook URL for the target channel"
+        }
+      }
+    }
+  }
+}
