@@ -1,0 +1,194 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Monthly Budget Utilisation",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          },
+          "max": 100,
+          "unit": "percent"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/costs/summary",
+          "root_selector": "",
+          "columns": [
+            { "selector": "budget_utilisation_pct", "text": "Budget Used %", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Total Month-to-Date Cost",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10000 },
+              { "color": "red", "value": 15000 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/costs/summary",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_cost", "text": "Total Cost", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Waste Savings Potential",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 12, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": { "mode": "fixed", "fixedColor": "orange" }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/waste/report",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_estimated_monthly_savings", "text": "Monthly Savings", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Advisor Recommendations",
+      "type": "stat",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": { "mode": "fixed", "fixedColor": "blue" }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/recommendations",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_estimated_annual_savings", "text": "Annual Savings", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Daily Cost Trends",
+      "type": "timeseries",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 8 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "showPoints": "auto"
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/costs/trends",
+          "root_selector": "",
+          "columns": [
+            { "selector": "date", "text": "Date", "type": "timestamp" },
+            { "selector": "cost", "text": "Daily Cost", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Cost by Team",
+      "type": "piechart",
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 18 },
+      "datasource": "FinOps API",
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/costs/by-team",
+          "root_selector": "",
+          "columns": [
+            { "selector": "team", "text": "Team", "type": "string" },
+            { "selector": "cost", "text": "Cost", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Cost by Environment",
+      "type": "piechart",
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 18 },
+      "datasource": "FinOps API",
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/costs/by-environment",
+          "root_selector": "",
+          "columns": [
+            { "selector": "environment", "text": "Environment", "type": "string" },
+            { "selector": "cost", "text": "Cost", "type": "number" }
+          ]
+        }
+      ]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["finops", "cost", "governance"],
+  "templating": { "list": [] },
+  "time": { "from": "now-30d", "to": "now" },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "FinOps Cost Overview",
+  "uid": "finops-cost-overview",
+  "version": 1
+}

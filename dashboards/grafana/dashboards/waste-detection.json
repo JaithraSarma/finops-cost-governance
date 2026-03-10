@@ -1,0 +1,163 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "title": "Total Waste Findings",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 0, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "red" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 10 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/waste/report",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_findings", "text": "Findings", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Estimated Monthly Savings",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 8, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD",
+          "color": { "mode": "fixed", "fixedColor": "orange" }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/waste/report",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_estimated_monthly_savings", "text": "Savings", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Active Recommendations",
+      "type": "stat",
+      "gridPos": { "h": 6, "w": 8, "x": 16, "y": 0 },
+      "datasource": "FinOps API",
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "fixed", "fixedColor": "blue" }
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/recommendations",
+          "root_selector": "",
+          "columns": [
+            { "selector": "total_recommendations", "text": "Recommendations", "type": "number" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Waste Findings — Detail Table",
+      "type": "table",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 6 },
+      "datasource": "FinOps API",
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/waste/report",
+          "root_selector": "findings",
+          "columns": [
+            { "selector": "resource_name", "text": "Resource", "type": "string" },
+            { "selector": "resource_type", "text": "Type", "type": "string" },
+            { "selector": "waste_type", "text": "Waste Type", "type": "string" },
+            { "selector": "resource_group", "text": "Resource Group", "type": "string" },
+            { "selector": "estimated_monthly_savings", "text": "Monthly Savings ($)", "type": "number" },
+            { "selector": "details", "text": "Details", "type": "string" },
+            { "selector": "detected_at", "text": "Detected", "type": "string" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Advisor Recommendations — Detail Table",
+      "type": "table",
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 18 },
+      "datasource": "FinOps API",
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/recommendations",
+          "root_selector": "recommendations",
+          "columns": [
+            { "selector": "description", "text": "Recommendation", "type": "string" },
+            { "selector": "impact", "text": "Impact", "type": "string" },
+            { "selector": "impacted_resource", "text": "Resource", "type": "string" },
+            { "selector": "estimated_annual_savings", "text": "Annual Savings ($)", "type": "number" },
+            { "selector": "action", "text": "Action", "type": "string" }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Recent Alerts",
+      "type": "table",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 30 },
+      "datasource": "FinOps API",
+      "targets": [
+        {
+          "refId": "A",
+          "type": "json",
+          "url": "http://host.docker.internal:7071/api/alerts/recent",
+          "root_selector": "",
+          "columns": [
+            { "selector": "created_at", "text": "Time", "type": "string" },
+            { "selector": "severity", "text": "Severity", "type": "string" },
+            { "selector": "title", "text": "Title", "type": "string" },
+            { "selector": "message", "text": "Message", "type": "string" },
+            { "selector": "cost_impact", "text": "Cost Impact ($)", "type": "number" },
+            { "selector": "source", "text": "Source", "type": "string" }
+          ]
+        }
+      ]
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["finops", "waste", "detection"],
+  "templating": { "list": [] },
+  "time": { "from": "now-7d", "to": "now" },
+  "timepicker": {},
+  "timezone": "utc",
+  "title": "FinOps Waste Detection & Recommendations",
+  "uid": "finops-waste-detection",
+  "version": 1
+}
