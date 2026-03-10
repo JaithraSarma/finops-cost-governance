@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "displayName": "Require 'owner' tag on Resource Groups",
+    "description": "Enforces that every resource group has an 'owner' tag identifying the responsible team or individual. Supports accountability and cost governance.",
+    "mode": "All",
+    "metadata": {
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the required tag"
+        },
+        "defaultValue": "owner"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

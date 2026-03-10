@@ -1,0 +1,38 @@
+{
+  "properties": {
+    "displayName": "Require 'cost-center' tag on Resource Groups",
+    "description": "Enforces that every resource group includes a 'cost-center' tag. This enables chargeback and showback to business units for accurate FinOps reporting.",
+    "mode": "All",
+    "metadata": {
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the required tag"
+        },
+        "defaultValue": "cost-center"
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "false"
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}

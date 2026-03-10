@@ -1,0 +1,56 @@
+{
+  "properties": {
+    "displayName": "FinOps Tagging Governance Initiative",
+    "description": "A policy initiative (policy set) that bundles all required tag policies together. Assigns require-environment-tag, require-cost-center-tag, require-owner-tag, and inherit-tags-from-rg as a single deployable unit.",
+    "metadata": {
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {},
+    "policyDefinitions": [
+      {
+        "policyDefinitionReferenceId": "requireEnvironmentTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/require-environment-tag",
+        "parameters": {
+          "tagName": { "value": "environment" },
+          "allowedValues": { "value": ["dev", "staging", "prod", "sandbox", "shared"] }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "requireCostCenterTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/require-cost-center-tag",
+        "parameters": {
+          "tagName": { "value": "cost-center" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "requireOwnerTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/require-owner-tag",
+        "parameters": {
+          "tagName": { "value": "owner" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "inheritEnvironmentTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/inherit-tags-from-rg",
+        "parameters": {
+          "tagName": { "value": "environment" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "inheritCostCenterTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/inherit-tags-from-rg",
+        "parameters": {
+          "tagName": { "value": "cost-center" }
+        }
+      },
+      {
+        "policyDefinitionReferenceId": "inheritOwnerTag",
+        "policyDefinitionId": "/subscriptions/{subscriptionId}/providers/Microsoft.Authorization/policyDefinitions/inherit-tags-from-rg",
+        "parameters": {
+          "tagName": { "value": "owner" }
+        }
+      }
+    ]
+  }
+}

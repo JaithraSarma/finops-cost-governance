@@ -1,0 +1,48 @@
+{
+  "properties": {
+    "displayName": "Require 'environment' tag on Resource Groups",
+    "description": "Enforces that every resource group must have an 'environment' tag (e.g., dev, staging, prod). This is critical for FinOps cost allocation and showback reporting.",
+    "mode": "All",
+    "metadata": {
+      "category": "Tags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "tagName": {
+        "type": "String",
+        "metadata": {
+          "displayName": "Tag Name",
+          "description": "Name of the required tag"
+        },
+        "defaultValue": "environment"
+      },
+      "allowedValues": {
+        "type": "Array",
+        "metadata": {
+          "displayName": "Allowed tag values",
+          "description": "List of allowed values for the environment tag"
+        },
+        "defaultValue": ["dev", "staging", "prod", "sandbox", "shared"]
+      }
+    },
+    "policyRule": {
+      "if": {
+        "allOf": [
+          {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions/resourceGroups"
+          },
+          {
+            "not": {
+              "field": "[concat('tags[', parameters('tagName'), ']')]",
+              "in": "[parameters('allowedValues')]"
+            }
+          }
+        ]
+      },
+      "then": {
+        "effect": "deny"
+      }
+    }
+  }
+}
