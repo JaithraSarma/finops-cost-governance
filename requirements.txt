@@ -1,0 +1,28 @@
+# FinOps Cost Governance - Root Requirements
+# Run: pip install -r requirements.txt
+
+# Azure SDKs
+azure-identity>=1.15.0
+azure-mgmt-costmanagement>=4.0.0
+azure-mgmt-compute>=30.0.0
+azure-mgmt-network>=25.0.0
+azure-mgmt-resource>=23.0.0
+azure-mgmt-advisor>=9.0.0
+azure-mgmt-monitor>=6.0.0
+azure-data-tables>=12.5.0
+
+# Azure Functions
+azure-functions>=1.17.0
+
+# HTTP & Utilities
+requests>=2.31.0
+python-dateutil>=2.8.2
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+responses>=0.23.0
+
+# Code quality
+ruff>=0.1.0

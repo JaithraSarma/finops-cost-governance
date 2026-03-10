@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  # ── Azure Storage Emulator ──
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    container_name: finops-azurite
+    ports:
+      - "10000:10000"   # Blob
+      - "10001:10001"   # Queue
+      - "10002:10002"   # Table
+    volumes:
+      - azurite-data:/data
+    command: "azurite --blobHost 0.0.0.0 --queueHost 0.0.0.0 --tableHost 0.0.0.0"
+
+  # ── Grafana Dashboard ──
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: finops-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD:-admin}
+      - GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH=/var/lib/grafana/dashboards/cost-overview.json
+    volumes:
+      - ./dashboards/grafana/provisioning:/etc/grafana/provisioning
+      - ./dashboards/grafana/dashboards:/var/lib/grafana/dashboards
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - azurite
+
+volumes:
+  azurite-data:
+  grafana-data:
